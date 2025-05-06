@@ -191,28 +191,32 @@ void loop() {
     // draw save menu
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_ncenB14_tr);
-    u8g2.drawStr(30,0,"NEW HIGHSCORE");
+    u8g2.drawStr(0,0,"NEW HIGH");
     char buf[16]; snprintf(buf,sizeof(buf),"%d", hs);
     u8g2.setFont(u8g2_font_ncenB10_tr);
-    u8g2.drawStr(50, 20, buf);
+    u8g2.drawStr(64, 20, buf);
     // options
     u8g2.setFont(u8g2_font_6x10_tr);
-    bool sel0 = (menuSel==0);
-    if(sel0) u8g2.drawFrame(0,30,SCREEN_W/2,20);
-    u8g2.drawStr(10,35,"Save");
-    u8g2.drawStr(10,45,"Name");
+    u8g2.drawStr(0, 34, "Save Score:");
     bool sel1 = (menuSel==1);
-    if(sel1) u8g2.drawFrame(SCREEN_W/2,30,SCREEN_W/2,20);
-    u8g2.drawStr(70,40,"DONT SAVE");
+    if(sel1) u8g2.drawFilledEllipse(3*SCREEN_W/4,55,2,2,U8G2_DRAW_ALL);
+    u8g2.drawStr(10,45,"No Name");
+    bool sel0 = (menuSel==0);
+    if(sel0) u8g2.drawFilledEllipse(SCREEN_W/4,55,2,2,U8G2_DRAW_ALL);
+    u8g2.drawStr(70,45,"With Name");
     u8g2.sendBuffer();
     if(justPressed(2)||justPressed(3)) menuSel = 1 - menuSel;
     if(justPressed(4)) {
-      if(menuSel==0) {
+      if(menuSel==1) {
         nameEntered=false; nameLen=0; curRow=0; curCol=0;
         while(!nameEntered) keyboardScreen();
         strncpy(hsName, nameBuf, sizeof(hsName));
         saveHighScore(hs);
         saveHighScoreName(hsName);
+      }
+      if(menuSel==0){
+        saveHighScore(hs);
+        saveHighScoreName("unknown");
       }
       inSaveMenu=false;
       delay(200);
